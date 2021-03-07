@@ -1,0 +1,19 @@
+Oltre al file in lez_vue qua abbiamo
+
+Per installare fontawesome con vue possiamo installare i singoli componenti e non tutto il pacchetto.
+Per usare fontawesome dobbiamo installare
+
+npm install --save @fortawesome/fontawesome-svg-core //installa l'svg del core
+npm install --save @fortawesome/free-solid-svg-icons //installa l'svg del set
+npm install --save @fortawesome/vue-fontawesome //installa i componenti
+
+inserire in main.js
+import {library} from '@fortawesome/fontawesome-svg-core'
+import {faSearch} from '@fortawesome/free-solid-svg-icons' //per importare soltanto il search
+import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
+
+library. add(faSearch); //per usare la lentina search
+Vue.component('font-awesome-icon', FontAwesomeIcon);
+
+----------------------------------------
+Per validare gli input possiamo usare vuelidate che valida gli input per data ed un altro che valida gli input su markup

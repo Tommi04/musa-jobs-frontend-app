@@ -1,0 +1,16 @@
+npm install tailwindcss
+
+poi crea una cartella scss dentro assets in cui importi
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+e creare nella dir base il file postcss.config.js con
+module.exports = {
+    plugins: {
+      tailwindcss: {},
+      autoprefixer: {},
+    }
+  }
+
+e lanciare "npm tailwindcss init"
