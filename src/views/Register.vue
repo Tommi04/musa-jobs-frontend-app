@@ -266,6 +266,9 @@ export default {
             //torna true o false
             //se true manda la chiamata API 
             //se false traccia gli errori e presentali nel form
+        },
+        submitForm: function(){
+            this.$store.dispatch('registerUser', this.userData);
         }
     }
 }

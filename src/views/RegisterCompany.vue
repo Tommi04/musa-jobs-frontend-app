@@ -16,19 +16,49 @@
                             <div class="relative flex justify-center">
                                 <img src="@/assets/images/musa_logo_bianco_web.png" alt="Musa formazione" class="w-2/3 md:w-1/3 lg:w-1/5">
                             </div>
+                                {{ userData }}
                             <div class="relative flex w-full justify-center">
                                 <!-- niente action perchè non stiamo lavorando in backend, faremo una chiamata API -->
                                 <form class="relative w-full md:3/5 lg:w-1/2 h-full my-6">
-                                    <mj-input   
+                                    <mj-input
+                                        class="mb-4"
+                                        layout="dark"
+                                        id="company-name"
+                                        type="text"
+                                        placeholder="Ragione Sociale"
+                                        :has-error="$v.userData.companyName.$error"
+                                        v-model="userData.companyName"
+                                        @blur="$v.userData.companyName.$touch()">
+                                        <p class="text-red-500" v-if="$v.userData.companyName.$dirty && $v.userData.companyName.$error">
+                                            {{ $v.userData.companyName.$error }}
+                                            Campo non valido
+                                        </p>
+                                    </mj-input>
+
+                                    <mj-select
+                                        class="mb-4"
+                                        layout="dark"
+                                        id="company-category"
+                                        empty-option-label="Seleziona una categoria"
+                                        :options="categories"
+                                        :has-error="$v.userData.category.$error"
+                                        v-model="userData.category"
+                                        @blur="$v.userData.category.$touch()">
+                                        <p class="text-red-500" v-if="$v.userData.category.$dirty && $v.userData.category.$error">
+                                            Campo non valido
+                                        </p>
+                                    </mj-select>
+                                    
+                                    <mj-input
                                         class="mb-4"
                                         layout="dark"
                                         id="company-name"
                                         type="text"
                                         placeholder="Nome referente"
-                                        :has-error="$v.userData.companyName.$error"
-                                        v-model="userData.companyName"
-                                        @input="$v.userData.companyName.$touch()">
-                                        <p class="text-red-500" v-if="$v.userData.companyName.$dirty && $v.userData.companyName.$error">
+                                        :has-error="$v.userData.firstName.$error"
+                                        v-model="userData.firstName"
+                                        @blur="$v.userData.firstName.$touch()">
+                                        <p class="text-red-500" v-if="$v.userData.firstName.$dirty && $v.userData.firstName.$error">
                                             Campo non valido
                                         </p>
                                     </mj-input>
@@ -40,7 +70,7 @@
                                         placeholder="Cognome referente"
                                         :has-error="$v.userData.lastName.$error"
                                         v-model="userData.lastName"
-                                        @input="$v.userData.lastName.$touch()">
+                                        @blur="$v.userData.lastName.$touch()">
                                         <p class="text-red-500" v-if="$v.userData.lastName.$dirty && $v.userData.lastName.$error">
                                             Campo non valido
                                         </p>
@@ -53,7 +83,7 @@
                                         placeholder="Email"
                                         :has-error="$v.userData.email.$error"
                                         v-model="userData.email"
-                                        @input="$v.userData.email.$touch()">
+                                        @blur="$v.userData.email.$touch()">
                                         <p class="text-red-500" v-if="$v.userData.email.$dirty && $v.userData.email.$error">
                                             Campo non valido
                                         </p>
@@ -66,7 +96,7 @@
                                         placeholder="password"
                                         :has-error="$v.userData.password.$error"
                                         v-model="userData.password"
-                                        @input="$v.userData.password.$touch()">
+                                        @blur="$v.userData.password.$touch()">
                                         <p class="text-red-500" v-if="$v.userData.password.$dirty && $v.userData.password.$error">
                                             Campo non valido, la password deve essere lunga almeno {{ $v.userData.password.$minLen }}
                                         </p>
@@ -79,7 +109,7 @@
                                         placeholder="Conferma password "
                                         :has-error="$v.userData.passwordConfirm.$error"
                                         v-model="userData.passwordConfirm"
-                                        @input="$v.userData.passwordConfirm.$touch()">
+                                        @blur="$v.userData.passwordConfirm.$touch()">
                                         <p class="text-red-500" v-if="$v.userData.passwordConfirm.$dirty && $v.userData.passwordConfirm.$error">
                                             Le password devono essre uguali
                                         </p>
@@ -208,12 +238,15 @@
 </template>
 
 <script>
-import {required, email, minLength, sameAs} from 'vuelidate/lib/validators'
+import axios from 'axios'
+import {required, email, minLength, sameAs, integer, minValue} from 'vuelidate/lib/validators'
 import MjInput from '@/components/MJInput'
+import MjSelect from '@/components/MJSelect'
 export default {
     name: 'RegisterCompany',
     components:{
-        'mj-input': MjInput
+        'mj-input': MjInput,
+        'mj-select': MjSelect
         // oppure 
         // MjInput
     },
@@ -221,13 +254,15 @@ export default {
         return {
             userData:{
                 companyName: '',
+                category: '',
                 firstName: '',
                 lastName: '',
                 email: '',
                 password: '',
                 passwordConfirm: '',
                 privacy: false,
-            }
+            },
+            categories: [],
         }
     },
     // i validations sono validazioni sulle proprietà. Vanno importate in cima allo script
@@ -236,6 +271,13 @@ export default {
             companyName:{
                 required
             },
+
+            category:{ //come nell'endpoint di registrazione
+                required,
+                integer,
+                minVal: minValue(1)
+            },
+
             firstName:{
                 required
             },
@@ -267,13 +309,40 @@ export default {
     },
     methods:{
         // guarda vuelidator magari
-        checkForm: function(){
-            return true
+        submitForm: function(){
+            // return true
+            
+            //da fare l'endpoint in laravel. dispatch prende dalle actions in auth.js
+            // this.$store.dispatch('registerCompany', this.userData);
+
             //controlla form
             //torna true o false
             //se true manda la chiamata API 
             //se false traccia gli errori e presentali nel form
+        },
+        fetchCategories(){
+            axios
+                //endpoint in laravel
+                .get( 'company-categories')
+                .then(res => {
+                    console.log(res); 
+
+                        // qua verrà valorizzato l'array qualora la risposta dovesse essere positiva
+                    // if(res.status === 200){
+                    //     this.categories = res.data.result.categories;
+                    // }
+                })
+                .catch(err => {
+                    console.log(err);
+                });
         }
+    },
+    created(){
+        console.log('sono in created');
+        //da creare l'endpoint in laravel
+        // this.fetchCategories();
+        //chiamata API per recuperare le categorie e poi lo metto dentro this.categories
+        this.categories = [{id: 1, label: "categoria 1"}];
     }
 }
 </script>

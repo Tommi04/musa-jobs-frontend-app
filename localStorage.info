@@ -1,0 +1,7 @@
+Per archiviare il token della sessione dobbiamo usare il local storage.
+Che altro non è che uno store locale nel browser fatto per dominio, quindi non si cancella refreshando la sessione
+
+Per accedervi da API javascript è 
+    localStorage
+poi dobbiamo salvarci lo store
+    localStorage.setItem('token', token);

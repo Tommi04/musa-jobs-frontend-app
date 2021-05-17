@@ -17,3 +17,11 @@ Vue.component('font-awesome-icon', FontAwesomeIcon);
 
 ----------------------------------------
 Per validare gli input possiamo usare vuelidate che valida gli input per data ed un altro che valida gli input su markup
+
+-------------------------------------------
+per le chiamate API possiamo usare 
+vue-resource anche se è vecchiotto
+axios che è meglio (promises based) (MEGLIO)
+la fetch-api che sta dentro al browser però a differenzia di axios, quindi ogni browser implementa la sua fetch-api
+
+vedere axios.info

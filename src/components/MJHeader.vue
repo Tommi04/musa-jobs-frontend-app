@@ -20,18 +20,38 @@
                 Home
                 <div class="marker"></div>
                 </router-link>  
-              <a href="">
+              <router-link to="/list">
                 Annunci
                 <div class="marker"></div>
-                </a>
+              </router-link>
+              <!-- <router-link to="/profile">
+                Profilo
+                <div class="marker"></div>
+              </router-link> -->
               <a href="http=//musaformazione.it" target="_blank">
                 Corsi
                 <div class="marker"></div>
-                </a>
+              </a>
           </nav>
           <div class="relative hidden lg:flex h-full items-end pb-3">
             <div class="relative mr-4">
-                <nomeDaUsare>{{headerButtonLabel}}</nomeDaUsare>
+              <div class="relative hidden lg:flex w-1/3 order-3 justify-end items-center">
+                <router-link 
+                  v-if="!isAuth"
+                  to="/login"
+                  class="relative inline-block bg-white rounded-full uppercase text-blue-600 py-1 px-5 lg:px-10 text-sm lg:text-base font-bold shadow hover:shadow-none">
+                  {{ headerButtonLabel }}
+                </router-link>
+
+                <button
+                  v-if="isAuth"
+                  @click="onLogout"
+                  class="relative inline-block bg-white rounded-full uppercase text-blue-600 py-1 px-5 lg:px-10 text-sm lg:text-base font-bold shadow hover:shadow-none">
+                  {{ headerButtonLabel }}  
+                </button>
+              </div>
+
+                <!-- <nomeDaUsare>{{headerButtonLabel}}</nomeDaUsare> -->
                 <!-- alternativa -->
                 <!-- <nomeDaUsare :label="headerButtonLabel">{{headerButtonLabel}}</nomeDaUsare> -->
                 <!-- MESSO NEL COMPONENTE components > MJHeaderButton.vue -->
@@ -68,32 +88,61 @@
           </nav>
         </div> -->
         <div class="relative flex lg:hidden w-1/3 order-3 justify-end items-center">
-            <nomeDaUsare>{{headerButtonLabel}}</nomeDaUsare>
+          <router-link 
+            v-if="!isAuth"
+            to="/login"
+            class="relative inline-block bg-white rounded-full uppercase text-blue-600 py-1 px-5 lg:px-10 text-sm lg:text-base font-bold shadow hover:shadow-none">
+            {{ headerButtonLabel }}
+          </router-link>
+
+          <button
+            v-else
+            @click="onLogout"
+            class="relative inline-block bg-white rounded-full uppercase text-blue-600 py-1 px-5 lg:px-10 text-sm lg:text-base font-bold shadow hover:shadow-none">
+            {{ headerButtonLabel }}  
+          </button>
         </div>
       </header>
     </div>
 </template>
 
 <script>
-import MjHeaderButton from '@/components/MJHeaderButton.vue'
+//il button è linkato a /login
+// import MjHeaderButton from '@/components/MJHeaderButton.vue'
 export default {
     name: 'mj-header',
     props:{
         label: String
     },
-    components:{
+    // components:{
         // senza il momedausare si chaima come il componente
-        'nomeDaUsare': MjHeaderButton
-    },
+        // 'nomeDaUsare': MjHeaderButton
+    // },
+    /* SE è LOGGATO LO RECUPERIAMO DAL localStorage
     data: function(){
         return{
             isLoggedIn: false
         }
     },
+    */
     computed:{
+        //invece che in data ho messo il recupero se è loggato o no qua
+        isAuth: function(){
+          //richiamo isAuth nello store di auth.js per sapere se sono autenticato o meno
+          console.log(this.$store.getters.isAuth);
+          return this.$store.getters.isAuth;
+        },
         headerButtonLabel: function(){
-            return this.isLoggedIn ? 'Logout': 'Accedi';
-        }
+            //cambio perchè ho preso la proprità isAuth dallo store
+            return this.isAuth ? 'Logout': 'Accedi';
+            // return this.isLoggedIn ? 'Logout': 'Accedi';
+        },
+    },
+    methods: {
+      onLogout(){
+        console.log('sono qua');
+        this.$store.dispatch('doLogout');
+      }
     }
 }
 </script>

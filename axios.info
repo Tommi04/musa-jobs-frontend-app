@@ -1,0 +1,24 @@
+npm install axios
+
+creo la pagina List.vue per giocare con axios.
+Aggiungo list a index.js
+
+Non siamo costretti ad importare axios nel main.js ma possiamo importarlo solo in quei componenti 
+in cui facciamo chiamate asincrone
+
+con axios possiamo definire delle variabili globali in main.js
+axios.defuaults.headers.common['Content-Type'] = 'application/json';
+
+con axios possiamo intercettare richieste uscenti e risposte entranti e modificarla (middleware in laravel)
+//request. la request va ritornata altrimenti la response va in errore
+axios.interceptors.request.use(config => {
+  console.log('req', config);
+  return config;
+});
+//response. va ritornata altrimenti va in errore
+axios.interceptors.response.use(config => {
+  console.log('res', config);
+  return config;
+});
+
+esegue un callback nel quale inietta la configurazione della chiamata

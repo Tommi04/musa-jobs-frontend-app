@@ -75,7 +75,11 @@ import MjHeader from '@/components/MJHeader.vue';
 export default {
   components:{
     MjHeader
-  }  
+  } ,
+  // created:function() {
+  created(){
+    this.$store.dispatch('checkLogin');
+  }
 }
 </script>
 

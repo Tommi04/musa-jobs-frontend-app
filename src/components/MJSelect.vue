@@ -7,15 +7,18 @@
           :icon="icon"
           class="text-white text-xl"></font-awesom-icon>
       </span>
-      <input 
+      <select 
           :class="inputClasses"
           :id="id" 
           :name="name"
-          :type="type" 
-          required
           :placeholder="placeholder"
-          @blur="$emit('blur', $event.target.value)"
+          v-on:change="$emit('input', $event.target.value)"
           v-bind:value="value">
+            <option value="">{{ emptyOptionLabel }}</option>
+            <option v-for="option in options" :key="option.id" :value="option.id">
+              {{ option.label }}
+            </option>
+          </select>
           <span
             class="absolute top-0 right-0 h-full 2-8 p-1 flex justify-center items-center"
             v-if="iconPosition === 'inner'">
@@ -30,7 +33,7 @@
 
 <script>
 export default {
-    name: 'mj-input',
+    name: 'mj-select',
     props:{
         layout: {
             type: String,
@@ -48,12 +51,6 @@ export default {
           type: String,
           default: '',
         },
-        type:{
-          type: String,
-          required: true,
-          // alternativi
-          default:'text',
-        },
         iconType:{
           type: String,
           default: ''
@@ -69,12 +66,33 @@ export default {
           }
         },
         value:{
-          type: [String, Number]
+          type: [Number, String]
           // questa proprietà value può prendere più type
         },
         hasError:{
           type: Boolean,
           default: false
+        },
+        emptyOptionLabel: {
+          type: String,
+          default: "Seleziona un valore"
+        },
+        options: {
+          type: Array,
+          default: function(){
+            return [
+              {
+                id: {
+                  type: Number,
+                  required: true
+                },
+                label: {
+                  type: String,
+                  required: true
+                }
+              }
+            ]
+          }
         }
     },
     // con le computed properties posso cambiare le proprietà di ciò che esporto, dal posto in cui le esporto
@@ -82,7 +100,7 @@ export default {
       inputClasses: function(){
         let classes = 'appearance-none border-2 rounded w-full py-2 px-3 text-white leading-tight focus:outline-none';
         if(this.hasError ){
-          classes += ' bg-red-400 border-red-700';
+          classes += 'bg-red-400 border-red-700';
         }else{
 
           if(this.layout === 'light'){
@@ -91,7 +109,6 @@ export default {
             classes += " bg-mj-blue-1";
           }
         }
-        console.log(classes);
         return classes;
       },
       containerClasses: function(){
