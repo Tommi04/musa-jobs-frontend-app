@@ -50,6 +50,21 @@ const routes = [
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () => import(/* webpackChunkName: "about" */ '../views/Login.vue'),
+    children: [
+      {
+        //mettendo solo / gli sto dicendo che appena entra nella rotta di login deve entrare in UserLogin
+        path: '/',
+        name: 'UserLogin',
+        component: () => import('../views/UserLogin.vue'),
+      },
+      {
+        //non dobbiamo mettere lo / perchè significherebbe che deve partire dalla root e quindi andare in user
+        //in realtà dobbiamo concatenare questo a /login già presente
+        path: 'company',
+        name: 'CompanyLogin',
+        component: () => import('../views/CompanyLogin.vue'),
+      }
+    ],
     beforeEnter: (to, from, next) => {
       //mi torna il token, se il token esiste (sei loggato) vai su list, altrimenti vai prosegui
       if(store.getters.isAuth){
@@ -85,6 +100,25 @@ const routes = [
       }
     }
   },
+  {
+    path:'/profile',
+    name: 'Profile',
+    component: () => import('../views/Profile.vue'),
+    beforeEnter: (to, from, next) => {
+      if(store.getters.isAuth) {
+        next();
+      } else {
+        next('/login');
+      }
+    }
+  },
+  {
+    path:'/not-found',
+    name: 'NotFound',
+    component: () => import('../views/404.vue')
+  },
+  //ALLA FINE!!
+  {path: '*', redirect: '/not-found'}
 ]
 
 const router = new VueRouter({

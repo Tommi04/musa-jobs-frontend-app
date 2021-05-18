@@ -1,0 +1,7 @@
+somigliano alle rotte annidate. Questa cosa è più funzionale. 
+Qua possiamo caricare componenti dinamici togliendo l'uno o l'altro.
+E' la logica dell'applicazione che decide quale componente visualizzare
+
+Questa cosa si fa tramite i componenti dinamici. Vanno messi dentro la cartella components
+
+Ho procato in Profile.vue

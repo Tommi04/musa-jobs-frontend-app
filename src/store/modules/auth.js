@@ -7,7 +7,7 @@ const state = {
     token: localStorage.getItem('token') || null, //ES6
     //da fare in laravel per certificare se il token Ã¨ valido
     // userData: localStorage.getItem('userData') || {},
-    //da laravel torna un oggetto injection quindi dovrò metterli in un oggetto
+    //da laravel torna un oggetto injection quindi dovrï¿½ metterli in un oggetto
     //errors:{}
 };
 const getters = {
@@ -26,6 +26,22 @@ const getters = {
     // }
     errors: state => {
         return state.errors;
+    },
+    userType: state => {
+        switch(state.userData.role_id){
+            case 2:
+                return 'user';
+            case 3:
+                return 'company';
+            default:
+                return 'none';
+        }
+    },
+    isUser: state => {
+        return state.userData.role_id === 2;
+    },
+    isCompany: state => {
+        return state.userData.role_id === 3;
     }
 };
 const mutations = {
@@ -43,6 +59,7 @@ const mutations = {
         state.token = null;
         state.userData = {};
         localStorage.removeItem('token');
+        console.log('token rimosso ' + state);
         router.push('/');
     },
     setUserData: (state, payload) => {
@@ -62,6 +79,17 @@ const actions = {
     doLogin: ({ commit }, payload) => {
         axios
             .post('user-login', payload)
+            .then( res => {
+                // console.log(res.data.result)
+                commit('login', res.data.result);
+            })
+            .catch( err => {
+                console.log('error', err)
+            });
+    },
+    doCompanyLogin: ({commit}, payload) => {
+        axios
+            .post('company-login', payload)
             .then( res => {
                 // console.log(res.data.result)
                 commit('login', res.data.result);
@@ -90,7 +118,7 @@ const actions = {
     checkLogin:({commit}) => {
         if(state.token){
             axios
-            .post('my-profile')
+            .get('my-profile')
             .then(res => {
                 if(res.status === 200){
                     commit('setUserData', res.data.result.userData);
@@ -151,10 +179,10 @@ const actions = {
         };
         axios
             //endpoint da creare in laravel. Manca che l'API ritorni il token
-            .post('register-user', postBody)
+            .post('register', postBody)
             .then( res => {
                 console.log(res);
-                commit('setUserData', {});
+                commit('login', {});
             })
             .catch(err => {
                 console.log(err);

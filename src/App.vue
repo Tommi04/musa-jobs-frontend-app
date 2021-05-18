@@ -76,10 +76,12 @@ export default {
   components:{
     MjHeader
   } ,
-  // created:function() {
-  created(){
-    this.$store.dispatch('checkLogin');
-  }
+  computed:{
+    user(){
+      console.log(this.$store.getters.user);
+      return this.$store.getters.user;
+    }
+  },
 }
 </script>
 

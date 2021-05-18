@@ -24,10 +24,10 @@
                 Annunci
                 <div class="marker"></div>
               </router-link>
-              <!-- <router-link to="/profile">
+              <router-link to="/profile">
                 Profilo
                 <div class="marker"></div>
-              </router-link> -->
+              </router-link>
               <a href="http=//musaformazione.it" target="_blank">
                 Corsi
                 <div class="marker"></div>

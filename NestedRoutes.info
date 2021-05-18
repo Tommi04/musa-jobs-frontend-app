@@ -1,0 +1,44 @@
+Le rotte annidate
+
+dentro vueJs le rotte funzionano tramite il tag specile <router-view/> in cui vengono caricati e scaricati
+i componenti e viene cambiato di conseguenza l'url definito nel file di rotte
+
+Possiamo mettere un altro <router-view> all'interno della pagina e gestirci dentro un cambio di rotte
+
+Dentro una router-view avremo un oggetto con dentro un'altra router-view. QUesta cosa ci permette di annidare
+le rotte.
+Purchè stiano annidati in profondità.
+
+Proviamola in Login, da Login.vue ho creato UserLogin.vue e CompanyLogin.vue che richiamerò a seconda di chi è l'utente
+per specificare queste rotte ho messo in router>index.js 
+
+    path: '/login',
+    name: 'Login',
+    component: () => import(/* webpackChunkName: "about" */ '../views/Login.vue'),
+    children: [
+      {
+        //mettendo solo / gli sto dicendo che appena entra nella rotta di login deve entrare in UserLogin
+        path: '/',
+        name: 'UserLogin',
+        component:() => import('../views/UserLogin.vue')
+      },
+      {
+        //non dobbiamo mettere lo / perchè significherebbe che deve partire dalla root e quindi andare in user
+        //in realtà dobbiamo concatenare questo a /login già presente
+        path: 'company',
+        name: 'CompanyLogin',
+        component:() => import('../views/CompanyLogin.vue')
+      }
+    ],
+
+Mentre in Login.vue sopra il <router-view></router-view> dove verrà inserito il contenuto della rotta
+ho messo un div con dentro il richiamo alle rotte tramite <router-link to="/login"> e <router-link to "/login/company>
+
+                            <div class="relative flex justify-center my-4">
+                                <router-link to="/login">
+                                    Utente
+                                </router-link>
+                                <router-link to="/login/company">
+                                    Azienda
+                                </router-link>
+                            </div>
