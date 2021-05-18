@@ -7,15 +7,15 @@
           :icon="icon"
           class="text-white text-xl"></font-awesom-icon>
       </span>
-      <input 
+      <input
           :class="inputClasses"
-          :id="id" 
+          :id="id"
           :name="name"
-          :type="type" 
+          :type="type"
           required
           :placeholder="placeholder"
-          @blur="$emit('blur', $event.target.value)"
-          v-bind:value="value">
+          v-bind:value="value"
+          @input="$emit('input', $event.target.value)">
           <span
             class="absolute top-0 right-0 h-full 2-8 p-1 flex justify-center items-center"
             v-if="iconPosition === 'inner'">
@@ -23,7 +23,7 @@
               :icon="icon"
               class="text-white text-xl"></font-awesome-icon>>
           </span>
-        
+
           <slot></slot>
   </div>
 </template>
@@ -80,7 +80,8 @@ export default {
     // con le computed properties posso cambiare le proprietà di ciò che esporto, dal posto in cui le esporto
     computed:{
       inputClasses: function(){
-        let classes = 'appearance-none border-2 rounded w-full py-2 px-3 text-white leading-tight focus:outline-none';
+        let classes = "";
+        classes = 'appearance-none border-2 rounded w-full py-2 px-3 text-white leading-tight focus:outline-none';
         if(this.hasError ){
           classes += ' bg-red-400 border-red-700';
         }else{

@@ -16,7 +16,28 @@
                             <div class="relative flex justify-center">
                                 <img src="@/assets/images/musa_logo_bianco_web.png" alt="Musa formazione" class="w-2/3 md:w-1/3 lg:w-1/5">
                             </div>
-                                {{ userData }}
+                                <!-- {{ userData }} -->
+
+                            <!-- Object.keys() restituisce un array delle chiavi dell'oggetto -->
+                            <div
+                                v-if="Object.keys(registrationErrors).length"
+                                class="relative p-4 bg-red-400 border-red-600 border">
+                                <button
+                                    class="absolute top-0 right-0"
+                                    @click="dismissAlert()">
+                                    X
+                                </button>
+                                <ul>
+                                    <li v-for="(error, key, index) of registrationErrors" :key="key">
+                                        {{ index }} - {{key}} - {{error}}
+                                        <div>
+                                            <strong>{{key}}</strong>
+                                            <p v-for="(errorMsg, index) of error" :key="index">{{errorMsg}}</p>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </div>
+
                             <div class="relative flex w-full justify-center">
                                 <!-- niente action perchè non stiamo lavorando in backend, faremo una chiamata API -->
                                 <form class="relative w-full md:3/5 lg:w-1/2 h-full my-6">
@@ -48,7 +69,7 @@
                                             Campo non valido
                                         </p>
                                     </mj-select>
-                                    
+
                                     <mj-input
                                         class="mb-4"
                                         layout="dark"
@@ -62,7 +83,7 @@
                                             Campo non valido
                                         </p>
                                     </mj-input>
-                                    <mj-input   
+                                    <mj-input
                                         class="mb-4"
                                         layout="dark"
                                         id="last-name"
@@ -75,7 +96,7 @@
                                             Campo non valido
                                         </p>
                                     </mj-input>
-                                    <mj-input   
+                                    <mj-input
                                         class="mb-4"
                                         layout="dark"
                                         id="email"
@@ -88,7 +109,7 @@
                                             Campo non valido
                                         </p>
                                     </mj-input>
-                                    <mj-input   
+                                    <mj-input
                                         class="mb-4"
                                         layout="dark"
                                         id="password"
@@ -101,7 +122,7 @@
                                             Campo non valido, la password deve essere lunga almeno {{ $v.userData.password.$minLen }}
                                         </p>
                                     </mj-input>
-                                    <mj-input   
+                                    <mj-input
                                         class="mb-4"
                                         layout="dark"
                                         id="passwordConfirm"
@@ -117,20 +138,20 @@
                                     <div class="mb-6">
                                         <label class="w-full block text-gray-500 font-bold">
                                             <input class="mr-2 leading-tight" type="checkbox" required v-model="userData.privacy">
-                                            <span 
+                                            <span
                                                 class="text-sm"
                                                 :class="[$v.userData.privacy.$invalid ? 'text-red-500' : 'text-mj-blue-1']">
                                                 <!-- :class="{'text-red-500': $v.userData.privacy.$invalid, 'text-mj-blue-1':!$v.userData.privacy.$invalid}"> -->
                                                 <!-- se privacy invalid fai :class -->
-                                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+                                                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
                                             </span>
                                         </label>
                                     </div>
                                     <div>
                                         <div class="flex justify-center">
                                             <!-- il tracking-wide è il letter-spacing -->
-                                            <button 
-                                                type="submit" 
+                                            <button
+                                                type="submit"
                                                 class="px-10 lg:px-16 py-2 lg:py-3 rounded-full bg-mj-blue-1 text-white disabled:bg-opacity-50 font-bold text-lg uppercase tracking-widest shadow-md"
                                                 :class="[!$v.$invalid ? 'hover:bg-mj-green-1' : 'hover:none' ]"
                                                 @click.prevent="submitForm"
@@ -142,63 +163,63 @@
 
                                     <!--
                                     <div class="mb-4">
-                                        <input 
-                                                class="appearance-none borer rounded w-full py-2 px-3 text-white bg-mj-blue-1 leading-tight focus:outline-none" 
-                                                id="company-name" 
-                                                type="text" 
+                                        <input
+                                                class="appearance-none borer rounded w-full py-2 px-3 text-white bg-mj-blue-1 leading-tight focus:outline-none"
+                                                id="company-name"
+                                                type="text"
                                                 placeholder="Ragione Sociale"
                                                 required
                                                 v-model="userData.companyName"
                                                 lazy>
-                                                <-- lazy è un modificatore pigro, il v-model si attiva solo quando c'è 
+                                                <-- lazy è un modificatore pigro, il v-model si attiva solo quando c'è
                                                 un evento esterno che modifica lo stato di quel componente, premo invio ad esempio --
                                                 {{ firstName.toUpperCase() }}
                                     </div>
                                     <div class="mb-4">
-                                        <input 
-                                                class="appearance-none borer rounded w-full py-2 px-3 text-white bg-mj-blue-1 leading-tight focus:outline-none" 
-                                                id="first-name" 
-                                                type="text" 
+                                        <input
+                                                class="appearance-none borer rounded w-full py-2 px-3 text-white bg-mj-blue-1 leading-tight focus:outline-none"
+                                                id="first-name"
+                                                type="text"
                                                 placeholder="Nome referente"
                                                 required
                                                 v-model="userData.firstName"
                                                 lazy>
-                                                <-- lazy è un modificatore pigro, il v-model si attiva solo quando c'è 
+                                                <-- lazy è un modificatore pigro, il v-model si attiva solo quando c'è
                                                 un evento esterno che modifica lo stato di quel componente, premo invio ad esempio --
                                                 {{ firstName.toUpperCase() }}
                                     </div>
                                     <div class="mb-4">
-                                        <input 
-                                                class="appearance-none borer rounded w-full py-2 px-3 text-white bg-mj-blue-1 leading-tight focus:outline-none" 
-                                                id="last-name" 
-                                                type="text" 
+                                        <input
+                                                class="appearance-none borer rounded w-full py-2 px-3 text-white bg-mj-blue-1 leading-tight focus:outline-none"
+                                                id="last-name"
+                                                type="text"
                                                 placeholder="Cognome referente"
                                                 required
                                                 v-model="userData.lastName">
                                     </div>
                                     <div class="mb-4">
-                                        <input 
-                                                class="appearance-none borer rounded w-full py-2 px-3 text-white bg-mj-blue-1 leading-tight focus:outline-none" 
-                                                id="email" 
-                                                type="email" 
+                                        <input
+                                                class="appearance-none borer rounded w-full py-2 px-3 text-white bg-mj-blue-1 leading-tight focus:outline-none"
+                                                id="email"
+                                                type="email"
                                                 placeholder="Email referente"
                                                 required
                                                 v-model="userData.email">
                                     </div>
                                     <div class="mb-4">
-                                        <input 
-                                                class="appearance-none borer rounded w-full py-2 px-3 text-white bg-mj-blue-1 leading-tight focus:outline-none" 
-                                                id="password" 
-                                                type="password" 
+                                        <input
+                                                class="appearance-none borer rounded w-full py-2 px-3 text-white bg-mj-blue-1 leading-tight focus:outline-none"
+                                                id="password"
+                                                type="password"
                                                 placeholder="Password"
                                                 required
                                                 v-model="userData.password">
                                     </div>
                                     <div class="mb-4">
-                                        <input 
-                                                class="appearance-none borer rounded w-full py-2 px-3 text-white bg-mj-blue-1 leading-tight focus:outline-none" 
-                                                id="confirmation-password" 
-                                                type="password" 
+                                        <input
+                                                class="appearance-none borer rounded w-full py-2 px-3 text-white bg-mj-blue-1 leading-tight focus:outline-none"
+                                                id="confirmation-password"
+                                                type="password"
                                                 placeholder="Conferma Password"
                                                 required
                                                 v-model="userData.passwordConfirm">
@@ -207,15 +228,15 @@
                                         <label class="w-full block text-gray-500 font-bold">
                                             <input class="mr-2 leading-tight" type="checkbox" required v-model="userData.privacy">
                                             <span class="text-sm text-mj-blue-1">
-                                                    Lorem ipsum dolor sit amet consectetur adipisicing elit. 
+                                                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
                                             </span>
                                         </label>
                                     </div>
                                     <div>
                                         <div class="flex justify-center">
                                             <-- il tracking-wide è il letter-spacing --
-                                            <button 
-                                                type="submit" 
+                                            <button
+                                                type="submit"
                                                 class="px-10 lg:px-16 py-2 lg:py-3 rounded-full bg-mj-blue-1 text-white font-bold text-lg uppercase tracking-widest shadow-md"
                                                 @click.prevent="checkForm">
                                                 <-- @click.prevent per non far funzionare il click --
@@ -247,7 +268,7 @@ export default {
     components:{
         'mj-input': MjInput,
         'mj-select': MjSelect
-        // oppure 
+        // oppure
         // MjInput
     },
     data: function(){
@@ -311,13 +332,16 @@ export default {
         // guarda vuelidator magari
         submitForm: function(){
             // return true
-            
+
             //da fare l'endpoint in laravel. dispatch prende dalle actions in auth.js
-            // this.$store.dispatch('registerCompany', this.userData);
+            // const asyncReg = this.$store.dispatch('registerCompany', this.userData); // torna una promise
+            // asyncReg
+                // .then()
+
 
             //controlla form
             //torna true o false
-            //se true manda la chiamata API 
+            //se true manda la chiamata API
             //se false traccia gli errori e presentali nel form
         },
         fetchCategories(){
@@ -325,7 +349,7 @@ export default {
                 //endpoint in laravel
                 .get( 'company-categories')
                 .then(res => {
-                    console.log(res); 
+                    console.log(res);
 
                         // qua verrà valorizzato l'array qualora la risposta dovesse essere positiva
                     // if(res.status === 200){
@@ -335,7 +359,11 @@ export default {
                 .catch(err => {
                     console.log(err);
                 });
+        },
+        dismissAlert(){
+            this.$store.dispatch('resetErrors');
         }
+
     },
     created(){
         console.log('sono in created');
@@ -343,6 +371,15 @@ export default {
         // this.fetchCategories();
         //chiamata API per recuperare le categorie e poi lo metto dentro this.categories
         this.categories = [{id: 1, label: "categoria 1"}];
+    },
+    destroyed(){
+        //cos� se usciamo e rientriamo svuotiamo gli errori
+        this.$store.dispatch('resetErrors');
+    },
+    computed:{
+        registrationErrors(){
+            return this.$store.getters.errors;
+        }
     }
 }
 </script>

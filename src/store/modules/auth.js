@@ -7,6 +7,8 @@ const state = {
     token: localStorage.getItem('token') || null, //ES6
     //da fare in laravel per certificare se il token è valido
     // userData: localStorage.getItem('userData') || {},
+    //da laravel torna un oggetto injection quindi dovr� metterli in un oggetto
+    //errors:{}
 };
 const getters = {
     token: state => {
@@ -18,10 +20,13 @@ const getters = {
     isAuth: state => {
         let stato = state.token !== null;
         return stato;
-    }
+    },
     // usersList: state => {
     //   return state.users;
     // }
+    errors: state => {
+        return state.errors;
+    }
 };
 const mutations = {
     login: (state, payload) => {
@@ -31,6 +36,8 @@ const mutations = {
         localStorage.setItem('token', payload.token);
         //da fare in laravel per certificare se il token è valido
         // localStorage.setItem('userData', payload.userData);
+        //sintassi per mandarmi su un'altra rotta
+        router.push
     },
     logout: (state) =>{
         state.token = null;
@@ -40,6 +47,12 @@ const mutations = {
     },
     setUserData: (state, payload) => {
         state.userData = payload;
+    },
+    setErrors:(state, payload) => {
+        state.errors = payload;
+    },
+    resetErrors:(state) => {
+        state.errors = {};
     }
     // setUsers: (state, payload) =>{
     //   state.users = payload;
@@ -52,8 +65,6 @@ const actions = {
             .then( res => {
                 // console.log(res.data.result)
                 commit('login', res.data.result);
-                //sintassi per mandarmi su un'altra rotta
-                router.push('/list')
             })
             .catch( err => {
                 console.log('error', err)
@@ -61,7 +72,7 @@ const actions = {
     },
     doLogout: ( {commit} ) => {
         axios
-            //serve il token, lo abbiamo messo nel main.js in 
+            //serve il token, lo abbiamo messo nel main.js in
             //axios.interceptors.request.use(config => {...}
             .post('logout')
             .then((res) => {
@@ -105,16 +116,28 @@ const actions = {
             confirmPassword: payload.passwordConfirm,
             privacy: payload.privacy
         };
+        commit('resetErrors');
         axios
             //endpoint da creare in laravel. Manca che l'API ritorni il token
             .post('register-company', postBody)
             .then( res => {
                 console.log(res);
-                commit('setUserData', {});
+                commit('login', res.data.result);
             })
             .catch(err => {
+                commit('setErrors', err.response.data.message)
                 console.log(err);
+                console.log(err.response);
+                console.log(err.request); //request che abbiamo mandato
+                console.log(err.message); //messaggio dello status code su back-end
+                console.log(err.config);  //
             })
+    },
+    setErrors: ({commit}, payload) => {
+        commit('setErrors', payload.response.data.message);
+    },
+    resetErrors: ({commit}) => {
+        commit('resetErrors');
     },
     registerUser: ({commit}, payload) => { //NON ANCORA OPERATIVO
         //per rimappare i nomi delle proprietà dello userData in RegisterCompany

@@ -16,7 +16,7 @@
                             <div class="relative flex w-full justify-center">
                                 <!-- niente action perchè non stiamo lavorando in backend, faremo una chiamata API -->
                                 <form class="relative w-full md:3/5 lg:w-1/2 h-full my-6">
-                                <mj-input   
+                                <mj-input
                                     class="mb-4"
                                     layout="dark"
                                     id="email"
@@ -24,12 +24,12 @@
                                     placeholder="Email"
                                     :has-error="$v.email.$error"
                                     v-model="email"
-                                    @blur="$v.email.$touch()">
+                                    @input="$v.email.$touch()">
                                     <p class="text-red-500" v-if="$v.email.$dirty && $v.email.$error">
                                         Campo non valido
                                     </p>
                                 </mj-input>
-                                <mj-input   
+                                <mj-input
                                     class="mb-4"
                                     layout="dark"
                                     id="password"
@@ -45,8 +45,8 @@
                                 <div>
                                     <div class="flex justify-center">
                                         <!-- il tracking-wide è il letter-spacing -->
-                                        <button 
-                                            type="submit" 
+                                        <button
+                                            type="submit"
                                             class="px-10 lg:px-16 py-2 lg:py-3 rounded-full bg-mj-blue-1 text-white disabled:bg-opacity-50 font-bold text-lg uppercase tracking-widest shadow-md"
                                             :class="[!$v.$invalid ? 'hover:bg-mj-green-1' : 'hover:none' ]"
                                             @click.prevent="submitForm"
@@ -60,7 +60,7 @@
                                         </button>
                                     </div>
                                     <!-- <div>
-                                        ci mostra se $invalid è true o false. 
+                                        ci mostra se $invalid è true o false.
                                         Possiamo usarlo per abilitare o disabilitare l'invio dal form
                                         {{ $v.$invalid }}
                                     </div> -->
@@ -126,7 +126,7 @@ export default {
                 */
                console.log(postBody);
             this.$store.dispatch('doLogin', postBody);
-        }
+        },
     }
 }
 </script>
