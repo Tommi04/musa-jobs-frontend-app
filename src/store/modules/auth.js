@@ -6,7 +6,7 @@ const state = {
     // token: localStorage.getItem('token') ? localStorage.getItem('token') : null, //ES5
     token: localStorage.getItem('token') || null, //ES6
     //da fare in laravel per certificare se il token è valido
-    // userData: localStorage.getItem('userData') || {},
+    userData: localStorage.getItem('userData') || {},
     //da laravel torna un oggetto injection quindi dovr� metterli in un oggetto
     //errors:{}
 };
@@ -51,11 +51,11 @@ const mutations = {
         // commit('setUserData'); // si può fare dalla ultime versioni di vue ma non è una cosa buona da fare
         localStorage.setItem('token', payload.token);
         //da fare in laravel per certificare se il token è valido
-        // localStorage.setItem('userData', payload.userData);
+        localStorage.setItem('userData', payload.userData);
         //sintassi per mandarmi su un'altra rotta
-        router.push
+        router.push('/list');
     },
-    logout: (state) =>{
+    logout: (state) => {
         state.token = null;
         state.userData = {};
         localStorage.removeItem('token');
@@ -70,6 +70,10 @@ const mutations = {
     },
     resetErrors:(state) => {
         state.errors = {};
+    },
+    setUserAvatar:(state, payload) => {
+        state.userData.details.photo = payload;
+        state.userData.details.photo_full_path = payload;
     }
     // setUsers: (state, payload) =>{
     //   state.users = payload;
@@ -88,6 +92,7 @@ const actions = {
             });
     },
     doCompanyLogin: ({commit}, payload) => {
+        console.log(payload);
         axios
             .post('company-login', payload)
             .then( res => {
@@ -99,13 +104,14 @@ const actions = {
             });
     },
     doLogout: ( {commit} ) => {
-        axios
+        if(state.token){
+            axios
             //serve il token, lo abbiamo messo nel main.js in
             //axios.interceptors.request.use(config => {...}
             .post('logout')
             .then((res) => {
                 if (res.status === 200){
-                    console.log(res);
+                    // console.log(res);
                     commit('logout');
                 }else{
                     throw new Error('errore di logout');
@@ -114,6 +120,7 @@ const actions = {
             .catch(err =>{
                 console.log(err);
             });
+        }
     },
     checkLogin:({commit}) => {
         if(state.token){
@@ -187,6 +194,9 @@ const actions = {
             .catch(err => {
                 console.log(err);
             })
+    },
+    setUserAvatar({commit}, payload){
+        commit('setUserAvatar', payload)
     }
 //     fetchUsers: ({commit, state}) => {
 //       Axios

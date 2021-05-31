@@ -9,6 +9,7 @@
                 input-type="text"
                 placeholder="Codice Azienda"
                 v-model="companyCode"
+                type="text"
                 :has-error="$v.companyCode.$error"
                 @input="$v.companyCode.$touch()">
                 <p class="text-red-500" v-if="$v.companyCode.$dirty && $v.companyCode.$invalid">
@@ -85,6 +86,7 @@ export default {
     },
     methods:{
         submitForm(){
+            console.log('companylogin');
             const postBody = {
                 username: this.companyCode,
                 password: this.password
@@ -103,7 +105,7 @@ export default {
                     console.log('error', err)
                 });
                 */
-               console.log(postBody);
+            console.log(postBody);
             this.$store.dispatch('doCompanyLogin', postBody);
         },
     }

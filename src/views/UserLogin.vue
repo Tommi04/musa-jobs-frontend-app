@@ -99,7 +99,7 @@ export default {
                     console.log('error', err)
                 });
                 */
-            console.log(postBody);
+            // console.log(postBody);
             this.$store.dispatch('doLogin', postBody);
         },
     }

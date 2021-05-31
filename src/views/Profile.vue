@@ -1,12 +1,18 @@
 <template>
-  <div class="list">
+  <main id="profile" class="relative w-full">
+    <div class="relative container mx-auto px-4">
+      <div class="relative flex flex-wrap">
+        <div class="relative mx-auto mt-6 w-full md:w-4/5">
+          <component :is="profileComponent"></component>
+        </div>
+      </div>
+    </div>
     <!-- GUARDIAMO UNA COSA IN PIU', QUESTO è ACCETTABILE. COMMENTIAMO ANCHE CompanyProfile
     <company-profile v-if="userType === 'company'"></company-profile>
     <user-profile v-if="userType === 'user'"></user-profile>
     -->
     <!-- LA COSA IN PIU'  -->
-    <component :is="profileComponent"></component>
-  </div>
+  </main>
 </template>
 
 <script>
@@ -25,14 +31,14 @@ export default {
       return this.$store.getters.userType;
     },
     profileComponent(){
-      console.log(this.userType);
-      if( this.userType === 'user') {
+      // console.log(this.userType);
+      // if( this.userType === 'user') {
         return 'UserProfile';
-      }else if(this.userType === 'company'){
-        return 'CompanyProfile';
-      }else{
-        return '';
-      }
+      // }else if(this.userType === 'company'){
+        // return 'CompanyProfile';
+      // }else{
+        // return '';
+      // }
     }
   }
 }

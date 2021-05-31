@@ -140,7 +140,7 @@ export default {
     },
     methods: {
       onLogout(){
-        console.log('sono qua');
+        // console.log('sono qua');
         this.$store.dispatch('doLogout');
       }
     }
