@@ -9,12 +9,12 @@ import Vuelidate from 'vuelidate'
 import '@/assets/scss/tailwind.scss'
 
 import {library} from '@fortawesome/fontawesome-svg-core'
-import {faSearch, faBriefcase, faAngleLeft, faAngleDown, faPencilAlt} from '@fortawesome/free-solid-svg-icons' //per importare soltanto il search
+import {faSearch, faBriefcase, faAngleLeft, faAngleDown, faAngleUp, faPencilAlt, faTimes, faPlus, faThumbsUp} from '@fortawesome/free-solid-svg-icons' //per importare soltanto il search
 import {faUser} from '@fortawesome/free-regular-svg-icons' //per importare soltanto il search
 import {FontAwesomeIcon} from '@fortawesome/vue-fontawesome'
 
 //definiamo variabili globali axios
-axios.defaults.baseURL = "http://localhost:8000/api/"  
+axios.defaults.baseURL = "http://localhost:8000/api/"
 // axios.defaults.baseURL = "https://reqres.in/api/"
 //così in list.vue possiamo mettere solo la parte finale
 axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
@@ -43,9 +43,9 @@ axios.interceptors.response.use(config => {
   return config;
 });
 
-Vue.use(Vuelidate); 
+Vue.use(Vuelidate);
 
-library. add(faSearch, faBriefcase, faUser, faAngleLeft, faAngleDown, faPencilAlt); //per usare la lentina search
+library. add(faSearch, faBriefcase, faUser, faAngleLeft, faAngleDown, faAngleUp, faPencilAlt, faTimes, faPlus, faThumbsUp); //per usare la lentina search
 Vue.component('font-awesome-icon', FontAwesomeIcon);
 
 Vue.config.productionTip = false

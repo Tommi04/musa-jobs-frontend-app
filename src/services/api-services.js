@@ -8,10 +8,20 @@ class ApiServices{
 
             // verificare che su laravel c'è
         // in questo modo torno la promise
-        return axios 
+        return axios
                 .post('upload-user-photo', formData, {
                     onUploadProgress
                 })
+    }
+
+    manageSkill(data){
+        return axios
+                    .post('user-skill-add',data);
+    }
+
+    removeSkill(id){
+        return axios
+                    .post('user-skill-remove', {skill_id: id});
     }
 }
 
