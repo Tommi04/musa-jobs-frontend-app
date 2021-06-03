@@ -1,7 +1,10 @@
 import axios from 'axios'
 
 const state = {
-   skills: null
+   skills: null,
+   jobOffers: [],
+   jobOffersMaxPages: 1,
+   jobOffersCurrentPage: 1
 };
 
 const getters = {
@@ -29,6 +32,17 @@ const actions = {
    },
    refreshUserSkills: ({commit}, payload) => {
       commit('setSkills', payload);
+   },
+   searchJobOffers: ({commit}, payload) => {
+      axios
+         .post('job-offers-by-skill', payload.skills)
+         .then( (res) =>{
+            // console.log(res);
+            commit('setJobOffers', res);
+         })
+         .catch( (err) =>{
+            console.log(err)
+         });
    }
 };
 
