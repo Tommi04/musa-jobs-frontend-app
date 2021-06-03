@@ -1,0 +1,62 @@
+Come si manda in produzione l'app di vue?
+
+    npm run build
+
+fa partire la build. 
+Crea la nuova cartella "dist" dove dentro c'è tutto il codice su una riga minificandolo e offuscandolo
+
+Il contenuto di dist andrà poi copiato nel server
+
+
+Unico punto da approfondire
+
+se entro in list e refresho la pagina, il sito non troverà più la rotta, perchè 
+l'app vue.js entra sempre da index.html, dopo di che diventa una single page application sul browser dell'utente
+quindi list come url, come rotta, non esiste, esiste solo index, poi quando noi clicchiamo sul profilo cambia l'url sopra 
+ma non è una cosa reale, è solo una cosa di facciata. Quindi rifreshando andrà a cercare una rotta reale,
+una risorsa remota che non c'è
+
+Dobbiamo quindi essere sicuri che l'host su cui mandiamo il sito faccia entrare tutto quanto da index.html
+compresi gli errori così che passerà per i nostri errori.
+Quindi dobbiamo andare nel pannello di configurazione dell'hosting e configurare che tutto passi da index.html
+Oppure usare il .htaccess dentro dist. Questa cosa vale solo se l'hosting è un hosting linux con php
+.htaccess spiega al server come interpretare determinate cose
+    <IfModule mod_rewrite.c>
+        RewriteEngine On
+        RewriteBase /
+        RewriteRule ^index\.html$ - [L]
+        RewriteCond ${REQUEST_FILENAME} !-f
+        RewriteCond ${REQUEST_FILENAME} !-d
+        RewriteRule ./index.html [L]
+    </IfModule>
+questo per far passare tutto da index.html compresi gli errori. Altrimenti se l'hosting non ha php
+dobbiamo configurarlo in modo che rientri tutto da index.html
+
+Ora possiamo andare a cambiare nal file main.js axios.defaults.baseURL con l'url ufficiale
+
+e ricompiliamo npm run buid e mettiamo il contenuto della dist sul server
+
+Dobbiamo anche cambiare dal back-end gli indirizzi concessi in config>cors.php in allowed_origins 
+e abilitare il sito di backend
+
+e ricompiliamo con npm run build e mettiamo il contenuto della dist sul server
+
+
+IMPORTANTE
+I siti creati con vueJs in modalità single page application non indicizzeranno mai.
+Perchè vue mette tutto il codice della single page su una riga codificata e l'unico <div></div> in chiaro
+è quello per accedere all'app <div id="app"></div> che è vuoto.
+Quindi per indicizzare un sito single page dobbiamo usare SSR, il Server Side Rendering.
+Il Server Side Rendering di vuejs si chiama Nuxt.js che è un framework per vueJs che ci permette di fare
+il server side Rendering. 
+Compila l'html in js di tutte le pagine e crea dei file .html intereattivi.
+Poi l'utente arriva sulla pagina e gli viene data la pagina già compilata. 
+Poi quando inizia la navigazione si passa in single page application quindi torna come vueJs normale.
+Questa cosa al motore di ricerca piace perchè chaima link per link, quindi chiamando link per link
+al motore di ricerca viene servita la compilata html, quindi lui lavora su quella. Esegue i link chiamandoli
+Mentre al motore di ricerca il sito restituisce il compilato per ogni pagina che chiama,
+all'utente vero e proprio alla prima interazione col sito viene data la pagina html mentre dalla seconda
+pagina in poi gli viene data l'applicazione in single page application, quindi scala in tempo reale.
+Nuxt.js, molto potente e molto semplice
+
+Queto problema di non indicizzare è comune a qualsiasi cosa fatta con js, quindi ce l'hanno angular, react, svelt, preact, 
