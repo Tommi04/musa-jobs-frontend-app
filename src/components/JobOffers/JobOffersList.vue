@@ -18,7 +18,88 @@
                 </div>
                 <div class="relative w-5/6 px-3">
                     <div class="relative w-full">
-
+                        <template
+                            v-if="jobOffers.lenght > 0">
+                            <div class="relative flex justify-between">
+                                <div>
+                                    Annunci di lavoro: {{ jobOffers.length }}
+                                </div>
+                                <div>
+                                    {{ CurrentPage }} / {{ MaxPages }}
+                                </div>
+                            </div>
+                            <ul>
+                                <li
+                                    v-for="jobOffer of jobOffers"
+                                    :key="jobOffer.id"
+                                    class="mb-6">
+                                    <div class="relative w-full">
+                                        <div class="relative w-full text-white">
+                                            <h3 class="font-semibold mb-1 text-2xl">
+                                                {{ jobOffer.company.name }}
+                                            </h3>
+                                        </div>
+                                        <div class="relative w-full text-white">
+                                            <h4 class="font-normal mb-1 text-xl">
+                                                {{ jobOffer.role }}
+                                            </h4>
+                                        </div>
+                                        <div class="relative w-full text-white">
+                                            <!-- direttiva html per dirgli che la descrizione del lavoro è un html -->
+                                            <p v-html="jobOffer.description"> </p>
+                                        </div>
+                                    </div>
+                                    <div class="relative flex flex-wrap -mx-3">
+                                        <div
+                                            v-for="jobOfferSkill of jobOffer.skills"
+                                            :key="jobOfferSkill.id"
+                                            class="col-auto p-3">
+                                                <div class="relative w-full bg-mj-blue1-text-white p-2 hover:shadow-2xl cursor-pointer">
+                                                    <div class="relative w-full-text-center">
+                                                        <strong>{{jobofferSkell.label }}</strong>
+                                                    </div>
+                                                    <div class="relative flex flex-wrap justify-between">
+                                                        <div class="relative col-auto text-center p-2 text-xs">
+                                                            <strong>Min</strong>
+                                                            <br>
+                                                            {{ jobOfferSkillpivot.min_level }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="relative flex flex-wrap justify-between">
+                                                        <div class="relative col-auto text-center p-2 text-xs">
+                                                            <strong>Max</strong>
+                                                            <br>
+                                                            {{ jobOfferSkillpivot.max_level }}
+                                                        </div>
+                                                    </div>
+                                                    <div class="relative flex flex-wrap justify-between">
+                                                        <div class="relative col-auto text-center p-2 text-xs">
+                                                            <strong>Exp</strong>
+                                                            <br>
+                                                            {{ jobOfferSkill.pivot.min_experience_years }}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                            <template
+                                v-if="canLoadMo > 1 && canLoadMore">
+                                <div class="relative w-full flex justify-center">
+                                    <button
+                                        class="relative py-2 px-8 bg-transparent hover:bg-mj-blue-1 text-white border border-white hover:border-mj-blue-1 text-sm font-bold tracking-wider"
+                                        @onClick="loadMore">
+                                        Carica altri
+                                    </button>
+                                </div>
+                            </template>
+                        </template>
+                        <template v-else>
+                            <div>
+                                Nessun annuncio per la tua ricerca
+                            </div>
+                        </template>
                     </div>
                 </div>
             </div>
@@ -49,6 +130,9 @@ export default {
         },
         currentPage(){
             return this.$store.getters.jobOffersCurrentPages;
+        },
+        canLoadMore(){
+            return this.maxPages > 1 && this.currentPage < this.maxPages;
         }
     },
 
@@ -70,6 +154,9 @@ export default {
 
 
             this.$store.dispatch( 'searchJobOffers', {skills: this.skillsToSend, page: this.currentPage} );
+        },
+        loadMore(){
+
         }
     },
 

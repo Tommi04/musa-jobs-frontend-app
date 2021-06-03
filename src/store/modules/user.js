@@ -10,12 +10,26 @@ const state = {
 const getters = {
    skills: state => {
       return state.skills
+   },
+   jobOffers: state => {
+      return state.jobOffers;
+   },
+   jobOffersMaxPages: state => {
+      return state.jobOffersMaxPages;
+   },
+   jobOffersCurrentPage: state => {
+      return state.jobOffersCurrentPage;
    }
 };
 
 const mutations = {
    setSkills: (state, payload) => {
       state.skills = payload;
+   },
+   setJobOffers: (state, payload) => {
+      state.jobOffers = payload.data.result.data;
+      state.jobOffersCurrentPage = payload.data.result.current_page;
+      state.jobOffersMaxPages = payload.data.result.last_page;
    }
 };
 
